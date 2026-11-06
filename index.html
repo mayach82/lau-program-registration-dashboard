@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LAU Program Registration Dashboard</title>
+<style>
+:root {
+  --site-primary: #17365d;
+  --site-secondary: #dce8f2;
+  --site-background: #f3f6fa;
+  --site-on-primary: #ffffff;
+  --site-on-secondary: #17365d;
+  --site-on-background: #172536;
+  --site-font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-font-heading: Inter, ui-sans-serif, system-ui, sans-serif;
+  --site-heading-scale: 1;
+  --site-spacing-scale: 1;
+  --site-radius-scale: 1;
+  --site-decoration-opacity: 1;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: var(--site-font-body); background: light-dark(#f3f6fa,#101820); color: light-dark(#172536,#e8eef5); }
+#app { min-height: 100vh; background-color: var(--site-background); color: var(--site-on-background); padding: calc(28px * var(--site-spacing-scale)) clamp(16px, 3vw, 42px); border-radius: 0; }
+header { background: var(--site-primary); color: var(--site-on-primary); border-radius: calc(18px * var(--site-radius-scale)); padding: clamp(22px, 3vw, 34px); position: relative; overflow: hidden; }
+header:after { content:""; position:absolute; width:280px; height:280px; border:1px solid rgba(255,255,255,.15); border-radius:50%; right:-90px; top:-150px; box-shadow:0 0 0 34px rgba(255,255,255,.035),0 0 0 70px rgba(255,255,255,.025); opacity:var(--site-decoration-opacity); pointer-events:none; }
+.eyebrow { text-transform:uppercase; letter-spacing:.14em; font-size:11px; font-weight:800; opacity:.75; }
+h1 { font: 750 calc(30px * var(--site-heading-scale))/1.15 var(--site-font-heading); margin:10px 0 8px; }
+header p { margin:0; max-width:800px; color:#e0e9f3; line-height:1.55; font-size:14px; }
+.source { margin-top:15px; font-size:12px; color:#dce8f2; }
+a { color:inherit; }
+.stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:18px 0; }
+.stat { background:light-dark(#fff,#1b2835); border:1px solid light-dark(#dce4ed,#334252); border-radius:calc(13px * var(--site-radius-scale)); padding:17px; }
+.stat small { display:block; color:light-dark(#66788a,#aab8c6); font-size:11px; font-weight:750; text-transform:uppercase; letter-spacing:.08em; }
+.stat strong { display:block; font-size:28px; margin-top:5px; font-weight:750; font-variant-numeric:tabular-nums; }
+.toolbar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:18px 0 12px; }
+input, select, button { font:inherit; }
+input, select { background:light-dark(#fff,#1b2835); color:light-dark(#172536,#e8eef5); border:1px solid light-dark(#cbd6e2,#405164); border-radius:9px; padding:11px 12px; min-height:42px; }
+#search { flex:1 1 260px; }
+button { border:0; border-radius:9px; padding:11px 15px; cursor:pointer; background:var(--site-primary); color:white; font-weight:700; }
+button.secondary { background:var(--site-secondary); color:var(--site-on-secondary); }
+.meta { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; color:light-dark(#647487,#aab8c6); font-size:12px; margin:12px 2px; }
+.table-wrap { overflow:auto; border:1px solid light-dark(#dce4ed,#334252); border-radius:14px; background:light-dark(#fff,#1b2835); }
+table { width:100%; border-collapse:collapse; min-width:1050px; }
+th { position:sticky; top:0; background:light-dark(#eaf0f6,#263647); color:light-dark(#31465c,#e4edf6); font-size:11px; text-transform:uppercase; letter-spacing:.07em; text-align:left; padding:13px 12px; z-index:1; }
+td { border-top:1px solid light-dark(#e7edf3,#2d3c4b); padding:13px 12px; vertical-align:top; font-size:13px; line-height:1.45; }
+tbody tr:hover { background:light-dark(#f7fafe,#202f3e); }
+.program { font-weight:750; min-width:230px; }
+.school { color:light-dark(#65778a,#adbac7); font-size:11px; display:block; margin-top:4px; font-weight:500; }
+.status { display:inline-flex; align-items:center; gap:6px; border-radius:20px; padding:5px 8px; font-size:11px; font-weight:750; white-space:nowrap; }
+.done { background:#dff3e9; color:#17633e; }
+.pending { background:#fff0d7; color:#85510a; }
+.unknown { background:light-dark(#edf1f5,#354352); color:light-dark(#58697a,#d1dbe4); }
+.stage { min-width:112px; }
+.stage .status { margin-bottom:5px; }
+.decree { color:light-dark(#526477,#bac7d3); font-size:11px; overflow-wrap:anywhere; }
+.nysed { font-weight:750; font-variant-numeric:tabular-nums; }
+.note { margin:14px 2px 0; color:light-dark(#617286,#aab8c6); font-size:12px; line-height:1.55; }
+@media(max-width:760px) { .stats{grid-template-columns:repeat(2,minmax(0,1fr));} h1{font-size:25px;} }
+@media(prefers-color-scheme:dark) {
+ :root { color-scheme:dark; --site-primary:#24496f; --site-secondary:#263e55; --site-background:#111c27; --site-on-secondary:#e7eff8; --site-on-background:#e8eef5; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+<header>
+  <div class="eyebrow">Lebanese American University · Academic compliance</div>
+  <h1>Program Registration Dashboard</h1>
+  <p>Approval tracking across the Vice Deans Council, Lebanese Ministry of Education and Higher Education (MEHE), and New York State Education Department (NYSED).</p>
+  <div class="source">Source: <a href="https://www.lau.edu.lb/about/accreditation/" target="_blank" rel="noopener">LAU Program Accreditation table</a> · Program list excludes entries marked “N/A” in the American Registration column.</div>
+</header>
+<section class="stats" aria-label="Dashboard summary">
+  <div class="stat"><small>Programs shown</small><strong id="total">—</strong></div>
+  <div class="stat"><small>Vice Deans Council</small><strong id="vdc">—</strong></div>
+  <div class="stat"><small>MEHE equivalence recorded</small><strong id="meheEq">—</strong></div>
+  <div class="stat"><small>NYSED number listed</small><strong id="nysedCount">—</strong></div>
+</section>
+<div class="toolbar">
+  <input id="search" type="search" placeholder="Search program or school…" aria-label="Search programs">
+  <select id="schoolFilter" aria-label="Filter by school"><option value="">All schools</option></select>
+  <select id="meheFilter" aria-label="Filter by MEHE status">
+    <option value="">All MEHE statuses</option><option value="complete">All 3 stages recorded</option><option value="partial">Some stages recorded</option><option value="none">No stages recorded</option>
+  </select>
+  <select id="nysedFilter" aria-label="Filter by NYSED status"><option value="">All NYSED statuses</option><option value="listed">NYSED number listed</option><option value="missing">No NYSED number shown</option></select>
+  <button class="secondary" id="reset">Reset filters</button>
+  <button id="export">Export CSV</button>
+</div>
+<div class="meta"><span id="resultCount">Loading programs…</span><span>All displayed programs are marked approved by the Vice Deans Council, per your instruction.</span></div>
+<div class="table-wrap">
+<table>
+<thead><tr>
+<th>Program / School</th><th>Vice Deans Council</th>
+<th>MEHE · Licensing</th><th>MEHE · Initiation</th><th>MEHE · Equivalence / Recognition</th><th>NYSED registration</th>
+</tr></thead>
+<tbody id="programRows"></tbody>
+</table>
+</div>
+<p class="note"><strong>Reading the status:</strong> A MEHE stage is marked “Recorded” only when the LAU source row explicitly includes that stage; the associated decree/reference is shown beneath it. “Not listed” means the source table does not show a decree for that stage, and is not an independent confirmation that an application is pending or rejected. NYSED values are displayed as the registration numbers printed in LAU’s table. The Vice Deans Council column is set to Approved for every row based on the instruction supplied for this dashboard.</p>
+</div>
+<script>
+const records = [["School of Architecture and Design", "Bachelor of Architecture", "2294 (license); 10/16/2003 (equivalence); 112/56/2017 (equivalence)", "27088"], ["School of Architecture and Design", "BFA in Fashion Design", "8746 (license); 699/m/2013 (initiation); 880/m/2018 (equivalence)", "40025"], ["School of Architecture and Design", "BFA in Graphic Design", "2294 (license); 1/5/2001 (equivalence); 139/62/201 (amendment)", "40023"], ["School of Architecture and Design", "BFA in Interior Design", "128/62/2017 and 128/62/2017 Bis (equivalence); 8853 (renaming of the program)", "40198"], ["School of Architecture and Design", "BFA in Studio Arts", "375/m/2023 (equivalence)", "42569"], ["School of Architecture and Design", "MA in Design", "3196 (license)", "40709"], ["School of Architecture and Design", "MA in Islamic Art", "958/2014 (license); 113/56/2017 (equivalence)", "39032"], ["School of Arts and Sciences", "BA in Arabic Language & Literature", "8487 (license); 3/m/2017 (initiation); 114/56/2017 (equivalence)", "38047"], ["School of Arts and Sciences", "BA in Communication", "2/4/2017 (equivalence)", "38617"], ["School of Arts and Sciences", "BA in English", "1/5/2011 (equivalence)", "38982"], ["School of Arts and Sciences", "BA in History", "1779 (license); 355/m/2010 (initiation); 533/2009 (equivalence)", "38070"], ["School of Arts and Sciences", "BA in Multimedia Journalism", "942/m/2015 (initiation); 27/52/2016 (equivalence)", "38084"], ["School of Arts and Sciences", "BA in Performing Arts", "942/m/2015 (initiation); 27/52/2016 (equivalence)", "38084"], ["School of Arts and Sciences", "BA in Political Science/International Affairs", "25-42/91 (equivalence)", "38984"], ["School of Arts and Sciences", "BA in Philosophy", "1779 (license); 355/m/2010 (initiation); 1/4/2017 (equivalence)", "38702"], ["School of Arts and Sciences", "BA in Psychology", "9278 (license); 111/56/2017 (equivalence)", "20313"], ["School of Arts and Sciences", "BA in Television & Film", "942/m/2015 (initiation); 27/52/2016 (equivalence)", "38227"], ["School of Arts and Sciences", "BA in Translation", "8487 (license); 3/m/2017 (initiation); 114/56/2017 (equivalence)", "38073"], ["School of Arts and Sciences", "BS in Applied Physics", "13359 (license); 1395/m/2025 (initiation)", "39082"], ["School of Arts and Sciences", "BS in Bioinformatics", "697/m/2013 (initiation); 17/46/2016 (equivalence)", "38132"], ["School of Arts and Sciences", "BS in Biology", "67/218 and 67/218 bis (equivalence)", "19880"], ["School of Arts and Sciences", "BS in Computer Science", "67/218, 67/218 bis, and 63/64/91 bis (equivalence)", "15010"], ["School of Arts and Sciences", "BS in Chemistry", "67/218 and 67/218 bis (equivalence); 897/m/2026 (equivalence of revised degree)", "15015"], ["School of Arts and Sciences", "BS in Education", "375/m/2023 (equivalence)", "40747"], ["School of Arts and Sciences", "BS in Mathematics", "1779 (license); 355/m/2010 (initiation); 67/218 and its reiterated version (equivalence)", "38672"], ["School of Arts and Sciences", "BS in Nutrition & Dietetics Coordinated Program", "179 (license); 697/m/2013 (initiation); 57/34/2015 (equivalence)", "39247"], ["School of Arts and Sciences", "BS in Nutrition and Dietetics", "179 (license); 1063/m/2010 (initiation); 60/68/2013 (equivalence); 989/m/2022 and 13370 (renaming)", "38686"], ["School of Arts and Sciences", "BS in Psychology", "1113/m/2026 (renewal of equivalence and conversion from BA to BS)", "20313 & 39222"], ["School of Arts and Sciences", "MA in Comparative Literature", "16411 (license); 33/m/2007 (initiation); 48/80/2008 (equivalence)", ""], ["School of Arts and Sciences", "MA in Conflict Resolution", "971 (license); 1262/m/2026 (initiation)", "40847"], ["School of Arts and Sciences", "MA in Education", "25/25/2002 (equivalence); 1112/m/2026 (renewal of equivalence)", "37972"], ["School of Arts and Sciences", "MA in Interdisciplinary Gender Studies", "697/m/2013 (license); 126/62/2017 (equivalence)", "38981"], ["School of Arts and Sciences", "MA in International Affairs", "16411 (license); 33/m/2007 (initiation); 49/80/2008 (equivalence)", "19879"], ["School of Arts and Sciences", "MA in Migration Studies", "653/m/2014 (initiation); 18/6/2016 (equivalence)", "39079"], ["School of Arts and Sciences", "MA in Multimedia Journalism", "13360 (license); 1394/m/2025 (initiation)", "39793"], ["School of Arts and Sciences", "MS in Data Science", "831/m/2024 (equivalence); 894/m/2026 (renewal of equivalence)", "43950"], ["School of Arts and Sciences", "MS in Biological Sciences", "16411 (license); 33/m/2007 (initiation); 138/56/2017 (equivalence); 1560/m/2025 (renewal); 896/m/2026 (amending decree 1560)", "39829"], ["School of Arts and Sciences", "MS in Computer Science", "15/8/2001 (equivalence); 895/m/2026 (renewal of equivalence)", "19887"], ["School of Arts and Sciences", "MS in Nutrition", "227/m/2023 (initiation); 1395/m/2026 (equivalence)", "39306"], ["School of Arts and Sciences", "MS in Clinical Psychology", "2073 (license)", ""], ["Adnan Kassar School of Business", "BS in Business", "67/218 and its reiterated version (equivalence)", "80284"], ["Adnan Kassar School of Business", "BS in Business Emphasis Hospitality & Tourism Management", "354/3/2021 (equivalence)", "37970"], ["Adnan Kassar School of Business", "BS in Economics", "67/218 and its reiterated version (equivalence)", "38630"], ["Adnan Kassar School of Business", "Executive Master of Business Administration (EMBA)", "14/8/2001 (equivalence); Decree 972/m/2024 (additional area of emphasis)", "38328"], ["Adnan Kassar School of Business", "LLM in Business Law", "812/m/2013 (initiation); 10/38/2016 (equivalence)", "40636"], ["Adnan Kassar School of Business", "MA in Applied Economics", "653/m/2014 (initiation); 685/m/2025 (equivalence)", "38904"], ["Adnan Kassar School of Business", "MS in Data Analytics", "832/m/2024 (equivalence)", "44534"], ["Adnan Kassar School of Business", "MS in Human Resources Management", "1448/m/2018 (initiation); 686/m/2025 (equivalence)", "39240"], ["Adnan Kassar School of Business", "MS in Finance and Accounting", "605 (license)", "45257"], ["Adnan Kassar School of Business", "Masters of Studies in Law (MSL) in Business Law", "388/m/2024 (equivalence)", "40637"], ["Adnan Kassar School of Business", "Master of Business Administration (MBA)", "3486 and 14/8/2001 (equivalence); 794/m/2023 (renewal of equivalence)", "40026"], ["School of Engineering", "BE in Chemical Engineering", "3810 (license); 4/m/2017 (initiation)", "43484"], ["School of Engineering", "BE in Civil Engineering", "9278 (license); 12/16/2003 (equivalence)", "27093"], ["School of Engineering", "BE in Computer Engineering", "9278 (license); 9/16/2003 (equivalence)", "27094"], ["School of Engineering", "BE in Electrical Engineering", "9278 (license); 11/16/2003 (equivalence)", "42201"], ["School of Engineering", "BE in Industrial Engineering", "9278 (license); 8/16/2003 (equivalence)", "27096"], ["School of Engineering", "BE in Mechanical Engineering", "16411 (license); 928/m/2007 (initiation); 148/72/2017 and 148/72/2017 Bis (equivalence)", "37291"], ["School of Engineering", "BE in Mechatronics Engineering", "4/m/2017 (initiation); 151/86/2017 (equivalence)", "39743"], ["School of Engineering", "BE in Petroleum Engineering", "4/m/2017 (initiation); 6/2/2018 (equivalence)", "39744"], ["School of Engineering", "MS in Civil & Environmental Engineering", "16411 (license); 928/m/2007 (initiation); 3/4/2017 (equivalence)", "39816"], ["School of Engineering", "MS in Computer Engineering", "16411 (license); 928/m/2007 (initiation); 3/4/2017 (equivalence)", "39225"], ["School of Engineering", "MS in Industrial Engineering & Engineering Management", "16411 (license); 928/m/2007 (initiation); 3/4/2017 (equivalence)", "39815"], ["School of Engineering", "MS in Mechanical Engineering", "16411 (license); 928/m/2007 (initiation); 150/82/2017 (equivalence)", "40667"], ["Alice Ramez Chagoury School of Nursing", "BS in Nursing", "1947 (license); 1864/m/2011 (initiation); 58/68/2013 (equivalence)", "37775"], ["School of Pharmacy", "BS in Pharmacy", "9278 (license); 13/16/2003 (equivalence)", "27091"], ["School of Pharmacy", "Doctor of Pharmacy", "149/82/2017 (equivalence)", "27092"], ["School of Pharmacy", "MS in Pharmaceutical Development & Management", "9278 (license); 127/62/127 (equivalence)", "39050"], ["Gilbert and Rose-Marie Chagoury School of Medicine", "Doctor of Medicine", "3103 (license); 63/72/2013 (equivalence)", "42597"]];
+const $ = (id) => document.getElementById(id);
+const stagePatterns = {
+  license: /\blicen[cs]e\b/i,
+  initiation: /\binitiat(?:ion|ed|e)\b/i,
+  equivalence: /\bequivalence\b/i
+};
+function stageInfo(raw, stage) {
+  const parts = raw.split(";").map(s => s.trim()).filter(Boolean);
+  const matches = parts.filter(p => stagePatterns[stage].test(p));
+  if (!matches.length) return {ok:false, text:"Not listed"};
+  return {ok:true, text:matches.join("; ")};
+}
+function pill(ok, yes="Recorded", no="Not listed") {
+  return `<span class="status ${ok ? "done" : "unknown"}">${ok ? "✓ " + yes : no}</span>`;
+}
+function render() {
+  const q = $("search").value.trim().toLowerCase();
+  const school = $("schoolFilter").value;
+  const mehe = $("meheFilter").value;
+  const nysed = $("nysedFilter").value;
+  const filtered = records.filter(r => {
+    const raw = r[2];
+    const stages = ["license","initiation","equivalence"].map(s => stageInfo(raw,s).ok);
+    const count = stages.filter(Boolean).length;
+    return (!q || (r[1]+" "+r[0]).toLowerCase().includes(q))
+      && (!school || r[0] === school)
+      && (!mehe || (mehe==="complete" ? count===3 : mehe==="partial" ? count>0 && count<3 : count===0))
+      && (!nysed || (nysed==="listed" ? !!r[3] : !r[3]));
+  });
+  $("programRows").innerHTML = filtered.map(r => {
+    const stageCells = ["license","initiation","equivalence"].map(s => {
+      const info = stageInfo(r[2],s);
+      return `<td class="stage">${pill(info.ok)}<div class="decree">${info.ok ? escapeHtml(info.text) : "—"}</div></td>`;
+    }).join("");
+    return `<tr><td class="program">${escapeHtml(r[1])}<span class="school">${escapeHtml(r[0])}</span></td>
+      <td>${pill(true,"Approved")}</td>${stageCells}
+      <td>${r[3] ? `<span class="status done">Listed</span><div class="nysed">${escapeHtml(r[3])}</div>` : `${pill(false,"Listed","Not listed")}<div class="decree">No number shown in source</div>`}</td></tr>`;
+  }).join("");
+  $("resultCount").textContent = `Showing ${filtered.length} of ${records.length} programs`;
+}
+function escapeHtml(v) { return String(v).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function csvCell(v) { return '"' + String(v ?? "").replace(/"/g,'""') + '"'; }
+function exportCsv() {
+  const head = ["School","Program","Vice Deans Council","MEHE Licensing","MEHE Initiation","MEHE Equivalence / Recognition","MEHE source text","NYSED registration"];
+  const body = records.map(r => {
+    const l=stageInfo(r[2],"license"), i=stageInfo(r[2],"initiation"), e=stageInfo(r[2],"equivalence");
+    return [r[0],r[1],"Approved",l.text,i.text,e.text,r[2],r[3] || "Not listed"];
+  });
+  const csv = [head,...body].map(row=>row.map(csvCell).join(",")).join("\r\n");
+  const blob = new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"});
+  const url = URL.createObjectURL(blob); const a=document.createElement("a");
+  a.href=url; a.download="lau-program-registration.csv"; a.click(); URL.revokeObjectURL(url);
+}
+function init() {
+  $("total").textContent=records.length;
+  $("vdc").textContent=records.length;
+  $("meheEq").textContent=records.filter(r=>stageInfo(r[2],"equivalence").ok).length;
+  $("nysedCount").textContent=records.filter(r=>!!r[3]).length;
+  [...new Set(records.map(r=>r[0]))].sort().forEach(s=>{
+    const opt=document.createElement("option"); opt.value=s; opt.textContent=s; $("schoolFilter").appendChild(opt);
+  });
+  ["search","schoolFilter","meheFilter","nysedFilter"].forEach(id=>$(id).addEventListener(id==="search"?"input":"change",render));
+  $("reset").addEventListener("click",()=>{["search","schoolFilter","meheFilter","nysedFilter"].forEach(id=>$(id).value="");render();});
+  $("export").addEventListener("click",exportCsv);
+  render();
+}
+init();
+</script>
+</body>
+</html>
